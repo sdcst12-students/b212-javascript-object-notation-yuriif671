@@ -49,3 +49,20 @@ We use json.dumps to convert a variable into a json encoded object.  In this cas
 example02.py
 line 12 adds a json decoding command "json.loads()"
 This allows us to easily decode some json encoded data and store it into a new variable.
+
+Working with JSON is especially important when you want to retrieve information from the Internet, such as when using the REQUESTS module. There are two kinds of requests we can make for data:
+
+get requests these are when information is added to the URL. eg: https://www.google.com/search?q=google+get+request&oq=google+get+request&aqs=chrome..69i57.4464j0j1&sourceid=chrome&ie=UTF-8 Notice all the additional information included after the ? symbol? That is part of the actual request. It is great for making sense of what data is being requested, but very bad if you are including password or authentication information
+
+post requests send data to a site with hidden information that is not seen or included in the URL. This is typical of login data when you are connecting to a website.
+
+Task 1
+Read the contents of a file that has a json encoded list of numbers.
+Find the largest number in the list
+
+Task 2
+Use the json encoded data that is retrieved from this website and print out the weekly menu
+You will need to decipher the json decoded data to determine what information the dictionary object contains
+
+Task 3
+Use the Weather API builder at https://open-meteo.com/en/docs to generate an API call for a city. We are going to make use of the REQUESTS.Request method to retrieve this data and unpack it with json.loads into a variable that we can use. Retrieve the data and present it in a more organized format. You may use text output or a window using Tkinter.  Our goal is to format the result in a reasonably organized format.
