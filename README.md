@@ -56,6 +56,9 @@ get requests these are when information is added to the URL. eg: https://www.goo
 
 post requests send data to a site with hidden information that is not seen or included in the URL. This is typical of login data when you are connecting to a website.
 
+
+** Note: all assignments must be completed within a class object
+
 Task 1
 Read the contents of a file that has a json encoded list of numbers.
 Find the largest number in the list
