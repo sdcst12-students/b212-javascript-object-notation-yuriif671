@@ -43,7 +43,8 @@ Consider the output of the code in example02.py
 ```
 numbers [3, 4, 5]
 numbers is a variable of type : <class 'list'> and contains [3, 4, 5]
-encodedNumbers is a variable of type <class 'str'> and contains [3, 4, 5]```
+encodedNumbers is a variable of type <class 'str'> and contains [3, 4, 5]
+```
 We use json.dumps to convert a variable into a json encoded object.  In this case, encoding the data doesn't appear to make any difference to how the data appears when we print it, but the **type** of the variable has changed from a list to a string.  As a single string, we can store it more easily and then decode it at a later date.
 
 example02.py
@@ -53,7 +54,14 @@ This allows us to easily decode some json encoded data and store it into a new v
 Working with JSON is especially important when you want to retrieve information from the Internet, such as when using the REQUESTS module. There are two kinds of requests we can make for data:
 
 get requests these are when information is added to the URL. eg: https://www.google.com/search?q=google+get+request&oq=google+get+request&aqs=chrome..69i57.4464j0j1&sourceid=chrome&ie=UTF-8 Notice all the additional information included after the ? symbol? That is part of the actual request. It is great for making sense of what data is being requested, but very bad if you are including password or authentication information
-
+We can break up the request data as:
+```
+q = "google get request"
+oq = "google get request"
+aqs = "chrome..69i57.4464j0j1"
+sourceid = "chrome"
+ie= "UTF-8"
+```
 post requests send data to a site with hidden information that is not seen or included in the URL. This is typical of login data when you are connecting to a website.
 
 
