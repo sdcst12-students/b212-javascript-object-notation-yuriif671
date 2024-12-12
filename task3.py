@@ -15,7 +15,6 @@ def getCityWeather(city):
         #(we'll be using geocoding api that's very popular)
         geocode = f"https://geocoding-api.open-meteo.com/v1/search?name={city}"
         geocode_response = requests.get(geocode)
-        #response.raise_for_status()
         coords = geocode_response.json()
 
         if "results" not in coords or not coords["results"]:
@@ -31,7 +30,6 @@ def getCityWeather(city):
         #Use coords to get weather from open-meteo
         meteo = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
         meteo_response = requests.get(meteo)
-        #weather_response.raise_for_status()
         weather = meteo_response.json()
 
         return weather["current_weather"], country
