@@ -5,37 +5,88 @@ Use the Weather API builder at https://open-meteo.com/en/docs to generate an API
 import requests
 import json
 import tkinter as tk
+from tkinter import messagebox
+import tkinter.font as tkFont
 
+#returns weather conditions and country name
+def getCityWeather(city):
+    try:
+        #first find the coordinates of your city 
+        #(we'll be using geocoding api that's very popular)
+        geocode = f"https://geocoding-api.open-meteo.com/v1/search?name={city}"
+        geocode_response = requests.get(geocode)
+        #response.raise_for_status()
+        coords = geocode_response.json()
 
-def fetch_weather_data(city):
-    url = f"https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&current_weather=true"
-    
+        if "results" not in coords or not coords["results"]:
+            messagebox.showerror("Error", "Could not retrieve coordinates data. Check name or or something else is wrong :(")
+            return 
 
-    response = requests.get(url)
+        #This program returns weather for top city result in geocode api
+        top_city = coords["results"][0]
+        country = top_city["country"]
+        lat = top_city["latitude"]
+        lon = top_city["longitude"]
 
-    weather_data = response.json()
-    current_weather = weather_data['current_weather']
-    temperature = current_weather['temperature']
-    wind_speed = current_weather['windspeed']
-    wind_direction = current_weather['winddirection']
-    weather_description = current_weather['weathercode']
+        #Use coords to get weather from open-meteo
+        meteo = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+        meteo_response = requests.get(meteo)
+        #weather_response.raise_for_status()
+        weather = meteo_response.json()
 
-    return f"Weather Data for {city}:\n" \
-           f"Temperature: {temperature}°C\n" \
-           f"Wind Speed: {wind_speed} km/h\n" \
-           f"Wind Direction: {wind_direction}°\n" \
-           f"Weather Description: {weather_description}"
+        return weather["current_weather"], country
 
-def display_weather(city):
-    weather_info = fetch_weather_data(city)
+    except requests.RequestException as e:
+        print(f"err: {e}")
+        return
 
-    window = tk.Tk()
-    window.title("Weather Information")
+#changes tkinter output label to weather conditions, city and country name output
+def displayWeather():
+    city = city_entry.get()
+    if not city:
+        messagebox.showwarning("Empty input", "Please Enter a City Name")
+        return
 
-    label = tk.Label(window, text=weather_info, font=("Comic Sans MS", 12), padx=20, pady=20)
-    label.pack()
+    weather, country = getCityWeather(city)
 
-    window.mainloop()
+    if weather is None:
+        messagebox.showerror("Error", "Could not retrieve open meteo data. Check name or something else is wrong :(")
+        return
 
-city = input("What city?: ")
-display_weather(city)
+    output = (
+        f"City: {city}\n"
+        f"Country: {country}\n"
+        f"Temperature: {weather['temperature']} °C\n"
+        f"Wind Speed: {weather['windspeed']} km/h\n"
+        f"Wind Direction: {weather['winddirection']} °\n"
+        f"Weather Code: {weather['weathercode']}"
+    )
+
+    output_label.config(text=output)
+
+#Tkinter part
+
+root = tk.Tk()
+root.title("Yurii Weather")
+
+#must have formatting for peak ui/ux and a e s t h e t i c s
+font = tkFont.nametofont("TkDefaultFont")
+font.configure(family="Comic Sans MS", size=10)
+root.option_add("*Font", font)
+
+frame = tk.Frame(root)
+frame.pack(pady=10)
+
+city_label = tk.Label(frame, text="Enter City:")
+city_label.grid(row=0, column=0, padx=5)
+
+city_entry = tk.Entry(frame)
+city_entry.grid(row=0, column=1, padx=5)
+
+get_weather_button = tk.Button(frame, text="Get Weather", command=displayWeather)
+get_weather_button.grid(row=0, column=2, padx=5)
+
+output_label = tk.Label(root, text="", justify="left", font=("Comic Sans MS", 12))
+output_label.pack(pady=10)
+
+root.mainloop()
